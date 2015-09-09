@@ -1,0 +1,77 @@
+﻿@using Agenda.Models;
+@model IEnumerable<Agenda.Models.Assignment>
+
+@{
+    Assignment[] assigmentsView = Model.ToArray();
+    ViewBag.Title = "Agenda";
+}
+
+<h2>Agenda</h2>
+<p>
+    Today is: @System.DateTime.Today.ToString("d")
+</p>
+
+<p>
+    @Html.ActionLink("Create New", "Create") | 
+    @Html.ActionLink("Remove Passed", "RemovePassed")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Time)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Discription)
+        </th>
+        <th></th>
+    </tr>
+
+
+    @{
+        //sort by date and hour
+        for (var i = 0; i < assigmentsView.Count(); i++)
+        {
+            for (var j = 0; j < assigmentsView.Count() - 1; j++)
+            {
+                if ((assigmentsView.ElementAt(j).Date > assigmentsView.ElementAt(j + 1).Date) && (assigmentsView.ElementAt(j).Time > assigmentsView.ElementAt(j + 1).Time))
+                {
+                    Assignment tmp = assigmentsView.ElementAt(j);
+                    assigmentsView.SetValue(assigmentsView.ElementAt(j + 1), j);
+                    assigmentsView.SetValue(tmp, j + 1);
+                }
+
+            }
+        }
+    }
+
+
+    @foreach (var item in assigmentsView)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discription)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { assignmentID = item.assignmentID }) |
+                @Html.ActionLink("Details", "Details", new { assignmentID = item.assignmentID }) |
+                @Html.ActionLink("Delete", "Delete", new { assignmentID = item.assignmentID })
+            </td>
+        </tr>
+    }
+
+</table>
